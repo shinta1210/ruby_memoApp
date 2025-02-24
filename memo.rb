@@ -1,11 +1,24 @@
 require "csv" # CSVファイルを扱うためのライブラリを読み込んでいます
 
+# csvファイル名
+$csvFilePath = ''
+
+
 # ファイル書き込み関数
 # 引数→入力されたファイル名
 def fileWrite(inputCsvFilePath)
   arrayInputData = []
 
-  inputCsvFilePath = 'Sample.csv' if inputCsvFilePath == '' #引数が空(新規作成)の場合、ファイル名をSample.csvにする
+  #引数が空(新規作成)の場合、ファイル名を入力する
+  if inputCsvFilePath == ''
+    p "ファイル名を入力してください(.csvは除く)"
+    fileName = gets.chomp
+    inputCsvFilePath = "#{fileName}" + ".csv"
+  end
+
+
+  p "メモしたい内容を入力してください"
+  p "完了したらCtrl+Dを押してください"
 
   # 値入力
   while true
@@ -28,9 +41,9 @@ end
 def fileSelect()
   p "ファイル名を入力してください(.csvは除く)"
   fileName = gets.chomp
-  csvFilePath = "#{fileName}" + ".csv"
+  $csvFilePath = "#{fileName}" + ".csv"
 
-  if File.exist?(csvFilePath)
+  if File.exist?($csvFilePath)
     p "メモを編集します"
     true
   else
@@ -40,10 +53,6 @@ def fileSelect()
 end
 
 
-
-# csvファイル名
-csvFilePath = ''
-
 puts "1 → 新規でメモを作成する / 2 → 既存のメモを編集する"
 
 # １か２が入力されるまで繰り返す
@@ -51,13 +60,11 @@ while true
   memoType = gets.to_i
 
   if memoType == 1
-    p "メモしたい内容を入力してください"
-    p "完了したらCtrl+Dを押してください"
-    fileWrite(csvFilePath);
+    fileWrite($csvFilePath);
     break
   elsif memoType == 2
     if fileSelect() == true
-      fileWrite(csvFilePath);
+      fileWrite($csvFilePath);
     end
     break
   else
